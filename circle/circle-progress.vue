@@ -4,7 +4,7 @@
 		<div class="right" :style="rightCircleStyle"></div>
 		<div class="mask">
 			<span class="caption">{{caption}}</span>
-			<span class="value"><count-to :endVal="value"></count-to><span style="margin-left: 90px;">%</span></span>
+			<span class="value"><count-to :endVal="value" :suffix="'%'"></count-to></span>
 		</div>
 	</div>
 </template>
@@ -81,7 +81,8 @@ export default {
 	font-size: 200px;
 	width: 1em;
 	height: 1em;
-	position: relative;
+  position: relative;
+  display: inline-block;
 	* {
 		position: absolute;
 		top: 0;
@@ -118,7 +119,6 @@ export default {
 		.value {
 			font-size: 0.25em;
 			top: 1.6em;
-			left: -30px;
 		}
 	}
 }
