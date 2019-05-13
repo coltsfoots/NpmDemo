@@ -54,12 +54,12 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style scoped>
 .pagination-container{
   display: block;
   margin: 20px 0 0;
-  .el-pagination{
-    text-align: center;
-  }
+}
+.pagination-container .el-pagination{
+  text-align: center;
 }
 </style>
