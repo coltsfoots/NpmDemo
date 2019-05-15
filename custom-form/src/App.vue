@@ -33,6 +33,7 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       formOptions: {
         formName: 'form',
+        showIcon: true,
         forms: [
           {
             label: '用户姓名',

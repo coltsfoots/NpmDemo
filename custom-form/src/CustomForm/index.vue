@@ -89,7 +89,7 @@
 			<el-button
 				type="primary"
 				@click="handleSearch"
-			>查询</el-button>
+			><i v-if="formOptions.showIcon" :class="iconClass"></i>查询</el-button>
 			<el-button
 				v-if="formOptions.showResetBtn"
 				@click.native="handleResetForm"
@@ -104,7 +104,16 @@ export default {
   name: 'CustomForm',
   props: {
     formOptions: Object
-  },
+	},
+	computed: {
+		iconClass() {
+			if(this.formOptions.showIcon && this.formOptions.iconClass) {
+				return this.formOptions.iconClass
+			} else {
+				return 'el-icon-search'
+			}
+		}
+	},
   data() {
     const { forms } = this.formOptions
     const formParams = {}
