@@ -2,15 +2,14 @@
 	<div class="pagination-container">
 		<el-pagination
 			background
-      v-if="page.totalPage"
-      :small="page.isSmall"
+      :small="isSmall"
       :current-page.sync="page.pageIndex || 1"
 			:page-size='page.pageSize || 20'
 			:total='totalPage'
-			:page-sizes='page.pageSizes || [20, 50, 100, 150, 200]'
-      :prev-text='page.prevText'
-      :next-text='page.nextText'
-			:layout='page.layout|| "prev, pager, next"'
+			:page-sizes='pageSizes'
+      :prev-text='prevText'
+      :next-text='nextText'
+			:layout='layout'
       @current-change="currentChangeHandle"
       @size-change="sizeChangeHandle"
 		>
@@ -22,23 +21,30 @@
 export default {
   name: 'Pagination',
   props: {
-    page: Object
-  },
-  computed: {
-    totalPage() {
-      return this.page.totalPage
+    page: Object,
+    isSmall: {
+      type: Boolean,
+      default: false
     },
-    // 判断是否获取数据失败
-    initBack() {
-      return this.page.totalPage / this.page.pageSize < this.page.pageIndex
-    }
-  },
-  watch: {
-    totalPage() {
-      if (this.initBack) {
-        this.page.pageIndex -= 1
-        this.$emit('currentChange')
-      }
+    totalPage: {
+      type: Number | String,
+      default: 0
+    },
+    pageSizes: {
+      type: Array,
+      default: () => [20, 50, 100, 150, 200]
+    },
+    prevText: {
+      type: String,
+      default: ''
+    },
+    nextText: {
+      type: String,
+      default: ''
+    },
+    layout: {
+      type: String,
+      default: 'prev, pager, next'
     }
   },
   methods: {
