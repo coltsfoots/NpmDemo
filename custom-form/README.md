@@ -34,6 +34,13 @@ itemWidth | 表单元素宽度 | Number | 否 | -
 editable | 是否可输入，只在类型为 date daterange 的时候才有用 | Boolean | 否 | false
 pickerOptions | 时间选择快捷选项 | Object | 否 | {}
 
+> 动态下拉框配置
+
+参数 | 说明 | 类型 | 是否必填 | 默认值
+----- | ----- | ----- | ----- | -----
+selectFetch | 获取远程数据的方法(必须支持Promise) | Function | 是 | -
+selectResultField | 接口返回数据字段名 | String | 否 | result
+selectResultHandle | 接口返回数据处理函数 | Function | 否 | -
 
 ## Build Setup
 
