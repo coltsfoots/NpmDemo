@@ -35,7 +35,7 @@ editable | 是否可输入，只在类型为 date daterange 的时候才有用 |
 pickerOptions | 时间选择快捷选项 | Object | 否 | {}
 
 > 动态下拉框配置
-
+ 
 参数 | 说明 | 类型 | 是否必填 | 默认值
 ----- | ----- | ----- | ----- | -----
 selectFetch | 获取远程数据的方法(必须支持Promise) | Function | 是 | -
