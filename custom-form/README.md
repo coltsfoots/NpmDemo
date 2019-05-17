@@ -16,6 +16,7 @@ inline | 行内表单 | Boolean | 否 | false
 labelWidth | 表单域标签宽度，子元素会继承 | Number | 否 | -
 itemWidth | 表单域宽度 | Number | 否 | -
 handleSubmit | 查询按钮点击事件处理函数，接收表单作为参数 | 否 | Function | -
+showSearchIcon | 是否在查询按钮上显示图标 | Boolean | 否 | false
 forms | 表单项配置 | Array | 是 | []
 
 > forms 参数配置
@@ -41,6 +42,12 @@ pickerOptions | 时间选择快捷选项 | Object | 否 | {}
 selectFetch | 获取远程数据的方法(必须支持Promise) | Function | 是 | -
 selectResultField | 接口返回数据字段名 | String | 否 | result
 selectResultHandle | 接口返回数据处理函数 | Function | 否 | -
+
+> slot
+
+参数 | 说明 | 是否必填 | 默认值
+----- | ----- | ----- | ----- | -----
+slot | 具名插槽(button-slot) | 否 | -
 
 ## Build Setup
 
