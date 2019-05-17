@@ -46,7 +46,7 @@ selectResultHandle | 接口返回数据处理函数 | Function | 否 | -
 > slot
 
 参数 | 说明 | 是否必填 | 默认值
------ | ----- | ----- | ----- | -----
+----- | ----- | ----- | -----
 slot | 具名插槽(button-slot) | 否 | -
 
 ## Build Setup
