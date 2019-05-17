@@ -1,160 +1,173 @@
 <template>
 	<el-form
-		:formOptions="formOptions"
-		:ref="formOptions.formName"
-		v-if="formOptions.forms"
-		:model="formParams"
-		:inline="formOptions.inline"
-		:rules="formOptions.rules || {}"
-		:label-position="formOptions.labelPosition"
-		:label-width="formOptions.labelWidth"
-		:inline-message="formOptions.inlineMessage"
-		:size="formOptions.size"
+		:model="params"
+		:inline="inline"
+		:ref="formName"
+		:label-width="labelWidth ? (labelWidth + 'px') : ''"
 		@submit.native.prevent="handleSearch()"
 	>
 		<el-form-item
-			v-for="(form, i) in formOptions.forms"
-			:key="i"
+			v-for="(form, index) in forms"
+			:key="index"
 			:prop="form.prop"
 			:label="form.label"
-			:label-width="form.labelWidth"
-			:size="form.size ? form.size : formOptions.size"
+			:rules="form.rules || []"
+			:label-width="form.labelWidht ? (form.labelWidth + 'px') : ''"
 		>
-			<!-- 输入框 -->
 			<el-input
 				v-if="form.itemType === 'input' || form.itemType === undefined"
-				:placeholder="form.placeholder"
-				:disabled="form.disabled"
+				v-model="params[form.prop]"
+				:size="form.size ? form.size : size"
 				:readonly="form.readonly"
-				v-model="formParams[form.prop]"
-				:style="{width: form.itemWidth}"
-			></el-input>
-
-			<!-- 密码框 -->
-			<el-input
-				v-if="form.itemType === 'password'"
-				type="password"
-				:placeholder="form.placeholder"
 				:disabled="form.disabled"
-				:readonly="form.readonly"
-				v-model="formParams[form.prop]"
-				:style="{width: form.itemWidth}"
+				:placeholder="form.placeholder"
+				:style="itemStyle + (form.itemWidth ? `width: ${form.itemWidth}px;` : '')"
 			></el-input>
-			<!-- 下拉框 -->
 			<el-select
-				v-if="form.itemType === 'select'"
-				v-model="formParams[form.prop]"
-				:style="{width: form.itemWidth}"
+				v-else-if="form.itemType === 'select'"
+				v-model="params[form.prop]"
+				:size="form.size ? form.size : size"
+				:disabled="form.disabled"
+				:placeholder="form.placeholder"
+				:style="itemStyle + (form.itemWidth ? `width: ${form.itemWidth}px;` : '')"
 			>
 				<el-option
-					v-for="option in form.options"
-					:placeholder="form.placeholder"
-					:disabled="form.disabled"
-					:key="option.label"
+					v-for="(option, optionIndex) in form.options"
+					:key="optionIndex"
 					:value="option.value"
 					:label="option.label"
 				></el-option>
+				<el-option
+					v-for="(op, opIndex) in selectOptions[selectOptionPrefix + index]"
+					:key="opIndex"
+					:value="op.value"
+					:label="op.label"
+				></el-option>
 			</el-select>
-			<!-- 时间框 -->
 			<el-date-picker
 				v-else-if="form.itemType === 'date'"
+				v-model="params[form.prop]"
 				type="date"
-				format="yyyy年MM月dd日"
-				value-format="yyyy-MM-dd"
 				:placeholder="form.placeholder"
+				:size="form.size ? form.size : size"
 				:disabled="form.disabled"
 				:readonly="form.readonly"
-				:size="form.size ? form.size : formOptions.size"
+				:editable="form.editable"
+				:style="itemStyle + (form.itemWidth ? `width: ${form.itemWidth}px;` : '')"
 				:picker-options="form.pickerOptions || {}"
-				v-model="formParams[form.prop]"
-				:style="{width: form.itemWidth}"
 			></el-date-picker>
 			<el-date-picker
 				v-else-if="form.itemType === 'daterange'"
+				v-model="params[form.prop]"
 				type="daterange"
-				format="yyyy年MM月dd日"
-				value-format="yyyy-MM-dd"
-				range-separator="至"
-				:placeholder="form.placeholder"
+				:size="form.size ? form.size : size"
 				:disabled="form.disabled"
 				:readonly="form.readonly"
-				:size="form.size ? form.size : formOptions.size"
+				:editable="form.editable"
+				:placeholder="form.placeholder"
+				:style="itemStyle + (form.itemWidth ? `width: ${form.itemWidth}px;` : '')"
 				:picker-options="form.pickerOptions || {}"
-				v-model="formParams[form.prop]"
-				:style="{width: form.itemWidth}"
 			></el-date-picker>
 		</el-form-item>
-
-		<el-form-item label="">
+		<el-form-item>
 			<el-button
 				type="primary"
+				:size="size"
 				@click="handleSearch"
-			><i v-if="formOptions.showIcon" :class="iconClass"></i>查询</el-button>
+			>查询</el-button>
 			<el-button
-				v-if="formOptions.showResetBtn"
-				@click.native="handleResetForm"
+				type="primary"
+				v-if="showResetBtn"
+				:size="size"
+				@click="handleResetForm"
 			>重置</el-button>
-			<slot name="button-slot"></slot>
 		</el-form-item>
 	</el-form>
 </template>
 
 <script>
+import { formProps } from './formProps'
 export default {
   name: 'CustomForm',
-  props: {
-    formOptions: Object
-	},
-	computed: {
-		iconClass() {
-			if(this.formOptions.showIcon && this.formOptions.iconClass) {
-				return this.formOptions.iconClass
-			} else {
-				return 'el-icon-search'
-			}
-		}
-	},
+  props: formProps,
   data() {
-    const { forms } = this.formOptions
-    const formParams = {}
-    forms.map(item => {
-      const propType = typeof item.prop
+    const { forms } = this.$props
+    const selectOptionPrefix = 'select-option-prefix'
+    const dataObj = {
+      selectOptions: {}
+    }
+    const params = {}
+    forms.forEach((form, index) => {
+      const propType = typeof form.prop
       if (propType === 'string') {
-        formParams[item.prop] = ''
+        params[form.prop] = ''
       } else {
-        throw new Error(`Prop's type must be a String`)
+        throw new Error('Prop is must be a String')
+      }
+      if (form.itemType === 'select' && form.selectFetch) {
+				const dataKey = selectOptionPrefix + index
+        dataObj.selectOptions[dataKey] = []
+        this.getSelectOptions({
+          fetch: form.selectFetch,
+          dataKey,
+          resultField: form.selectResultField || 'result',
+          resultHandle: form.selectResultHandle
+        })
       }
     })
     return {
-      formParams
+      params,
+      selectOptionPrefix,
+      ...dataObj
     }
   },
+  computed: {
+    itemStyle() {
+      const { itemWidth } = this.$props
+      if (itemWidth) {
+        return `width: ${itemWidth}px;`
+      }
+      return ''
+    }
+	},
+	created() {
+		console.log(this)
+	},
   methods: {
-    handleResetForm() {
-      this.$refs[this.formOptions.formName].resetFields()
-    },
     handleSearch() {
-      this.getParams((error, formparams) => {
+      this.getParams((error, params) => {
         if (!error) {
-          const { handleSubmit } = this.formOptions
+          const { handleSubmit } = this.$props
           if (handleSubmit) {
-            handleSubmit(formparams)
+            handleSubmit(params)
+          } else {
+            throw new Error('Need to set attribute handleSubmit')
           }
         }
       })
     },
     getParams(callback) {
-      this.$refs[this.formOptions.formName].validate(valid => {
+      this.$refs[this.formName].validate(valid => {
         if (valid) {
           if (callback) {
-            callback(null, this.formParams)
+            callback(null, this.params)
           }
         }
       })
+    },
+    handleResetForm() {
+      this.$refs[this.formName].resetFields()
+    },
+    getSelectOptions({ fetch, dataKey, resultField, resultHandle }) {
+      fetch().then(response => {
+        const result = response[resultField]
+        if (resultHandle) {
+          this.selectOptions[dataKey] = result.map(resultHandle)
+        } else {
+          this.selectOptions[dataKey] = result
+        }
+      })
     }
-  },
-  created() {
-    // console.log(this)
   }
 }
 </script>
