@@ -47,6 +47,13 @@ export default {
       default: 'prev, pager, next'
     }
   },
+  watch: {
+    totalPage(total) {
+      if(total) {
+        this.totalPage = total
+      }
+    }
+  },
   methods: {
     currentChangeHandle(curr) {
       this.page.pageIndex = curr
