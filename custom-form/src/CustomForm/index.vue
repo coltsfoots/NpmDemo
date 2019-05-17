@@ -74,13 +74,14 @@
 				type="primary"
 				:size="size"
 				@click="handleSearch"
-			>查询</el-button>
+			><i :class="showSearchIcon ? 'el-icon-search' : ''"></i>查询</el-button>
 			<el-button
 				type="primary"
 				v-if="showResetBtn"
 				:size="size"
 				@click="handleResetForm"
 			>重置</el-button>
+			<slot name="button-slot"></slot>
 		</el-form-item>
 	</el-form>
 </template>
