@@ -1,7 +1,7 @@
 {
   "name": "vue-simple-custom-table",
   "description": "自定义基于 element-ui 的表格",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "chenzhuo <523312202@qq.com>",
   "license": "MIT",
   "private": false,

@@ -41,6 +41,7 @@
 				:key="i"
 				:label="column.label"
 				:prop="column.prop"
+				:width="column.width"
 				:min-width="column.minWidth"
 				:fixed="column.fixed"
 				:formatter="column.formatter ? column.formatter : null"
