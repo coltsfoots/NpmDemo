@@ -48,6 +48,9 @@
 				v-else-if="form.itemType === 'date'"
 				v-model="params[form.prop]"
 				type="date"
+				format="yyyy年MM月dd日"
+				@change="form.changeDate(params[form.prop])"
+				:value-format="form.valueFormat || 'yyyy-MM-dd'"
 				:placeholder="form.placeholder"
 				:size="form.size ? form.size : size"
 				:disabled="form.disabled"
@@ -60,6 +63,10 @@
 				v-else-if="form.itemType === 'daterange'"
 				v-model="params[form.prop]"
 				type="daterange"
+				format="yyyy年MM月dd日"
+				range-separator="至"
+				@change="form.changeDate(params[form.prop])"
+				:value-format="form.valueFormat || 'yyyy-MM-dd'"
 				:size="form.size ? form.size : size"
 				:disabled="form.disabled"
 				:readonly="form.readonly"
@@ -74,7 +81,7 @@
 				type="primary"
 				:size="size"
 				@click="handleSearch"
-			><i :class="showSearchIcon ? 'el-icon-search' : ''"></i>查询</el-button>
+			><i v-if="showSearchIcon" class="el-icon-search"></i>查询</el-button>
 			<el-button
 				type="primary"
 				v-if="showResetBtn"
@@ -135,6 +142,9 @@ export default {
 		console.log(this)
 	},
   methods: {
+		isArray(value){
+			return typeof value === 'object' && Object.prototype.toString.call(value) === '[object Array]'
+		},
     handleSearch() {
       this.getParams((error, params) => {
         if (!error) {
@@ -162,7 +172,7 @@ export default {
     getSelectOptions({ fetch, dataKey, resultField, resultHandle }) {
       fetch().then(response => {
         const result = response[resultField]
-        if (resultHandle) {
+        if (resultHandle && this.isArray(result)) {
           this.selectOptions[dataKey] = result.map(resultHandle)
         } else {
           this.selectOptions[dataKey] = result
