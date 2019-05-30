@@ -50,7 +50,7 @@
 			<el-cascader
 				v-else-if="form.itemType === 'cascader'"
 				v-model="params[form.prop]"
-				:size="form.size || size"
+				:size="form.size ? form.size : size"
 				:placeholder="form.placeholder"
 				:disabled="form.disabled"
 				:separator="form.separator || '/'"
@@ -62,6 +62,45 @@
 				:style="itemStyle + (form.itemWidth ? `width: ${form.itemWidth}px;` : '')"
 				@change="form.handleCascaderChange ? form.handleCascaderChange(params[form.prop]) : null"
 			></el-cascader>
+			<el-switch
+				v-else-if="form.itemType === 'switch'"
+				v-model="params[form.prop]"
+				:disabled="form.disabled"
+				:active-value="form.activeValue || true"
+				:inactive-value="form.inActiveValue || false"
+				:active-color="form.activeColor || '#13ce66'"
+				:inactive-color="form.inActiveColor || '#dcdfe6'"
+				:active-text="form.ativeText || ''"
+				:inactive-text="form.inActiveText || ''"
+				@change="form.handleSwitchChange ? form.handleSwitchChange(params[form.prop]) : null"
+			></el-switch>
+			<el-radio-group
+				v-else-if="form.itemType === 'radio'"
+				v-model="params[form.prop]"
+				:disabled="form.disabled"
+				@change="form.handleRadioChange ? form.handleRadioChange(params[form.prop]) : null"
+			>
+				<el-radio
+					v-for="radio in form.radioOptions"
+					:key="radio.label"
+					:label="radio.label"
+					:disabled="form.disabled ? form.disabled : radio.disabled"
+				>{{radio.radioText}}</el-radio>
+			</el-radio-group>
+			<el-checkbox-group
+				v-else-if="form.itemType === 'checkbox'"
+				v-model="params[form.prop]"
+				:disabled="form.disabled"
+				:min="form.min"
+				:max="form.max"
+				@change="form.handleCheckboxChange ? form.handleCheckboxChange(params[form.prop]) : null"
+			>
+				<el-checkbox
+					v-for="checkbox in form.checkboxOptions"
+					:key="checkbox.label"
+					:label="checkbox.label"
+				>{{checkbox.checkboxText}}</el-checkbox>
+			</el-checkbox-group>
 			<el-date-picker
 				v-else-if="form.itemType === 'date'"
 				v-model="params[form.prop]"
@@ -106,6 +145,7 @@
 				:size="size"
 				@click="handleResetForm"
 			>重置</el-button>
+			<template slot="button-slot"></template>
 		</el-form-item>
 	</el-form>
 </template>
@@ -118,7 +158,7 @@ export default {
   data() {
     const { forms } = this.$props
 		const selectOptionPrefix = 'select-option-prefix'
-		const cascaderOptionPrefix = 'cascadere-option-prefix'
+		const cascaderOptionPrefix = 'cascader-option-prefix'
     const dataObj = {
 			selectOptions: {},
 			cascaderOptions: {}
