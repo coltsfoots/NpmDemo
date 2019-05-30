@@ -145,7 +145,7 @@
 				:size="size"
 				@click="handleResetForm"
 			>重置</el-button>
-			<template slot="button-slot"></template>
+			<slot name="button-slot"></slot>
 		</el-form-item>
 	</el-form>
 </template>
